@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
     MatToolbarModule,
     MatIconModule,
     MatInputModule,
-    MatSlideToggleModule,
+    MatSlideToggleModule
   ],
 })
 export class AngularMaterialModule {}

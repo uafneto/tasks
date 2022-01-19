@@ -18,3 +18,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   bottom: 2rem;
   right: 2rem;
 }
+
+.snackbar-error {
+  background-color: red;
+}
+
+.snackbar-success {
+  background-color: green;
+}
+
+.snackbar-info {
+  background-color: yellow;
+  color: black;
+}
