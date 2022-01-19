@@ -1,6 +1,11 @@
 import { ITask } from './../../models/itask';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaskRepository } from '../../repositories/task.repository';
 import { SnackBarService } from 'src/app/services/snack-bar-service';
@@ -15,8 +20,8 @@ export class TaskFormPageComponent implements OnInit {
 
   // configuração do formulário
   form = this.formBuild.group({
-    title: [''],
-    description: [''],
+    title: ['', Validators.required],
+    description: ['', Validators.required],
     done: [false],
   });
 
@@ -58,12 +63,12 @@ export class TaskFormPageComponent implements OnInit {
           done: response.done,
         });
       },
-      error: () => alert('Erro ao buscar uma tarefa')
+      error: () => alert('Erro ao buscar uma tarefa'),
     });
   }
 
   onSubmit(): void {
-      const taskToSave: ITask = {
+    const taskToSave: ITask = {
       ...this.form.value, // pegando todos os valores do formulário
       id: this.taskId, // atualizando o id caso exista
     };
@@ -76,21 +81,40 @@ export class TaskFormPageComponent implements OnInit {
   }
 
   create(task: ITask): void {
-    this.taskRepository.create(task).subscribe(escreve => {
-      this.snackbar.addSuccess('Tarefa Criada com Sucesso');
-      this.rota.navigate(['/']);
-    });
+    if (this.form.valid) {
+      this.taskRepository.create(task).subscribe((escreve) => {
+        this.snackbar.addSuccess('Tarefa Criada com Sucesso');
+        this.rota.navigate(['/']);
+      });
+    } else {
+      this.form.dirty;
+      this.form.touched;
+      this.snackbar.addError('Necessário preencher os campos');
+    }
   }
 
   update(task: ITask): void {
-    this.taskRepository.update(task).subscribe(rescreve => {
-      this.snackbar.addInfo('Tarefa Atualizada com Sucesso');
-      this.rota.navigate(['/']);
-    });
+    if (this.form.valid) {
+      this.taskRepository.update(task).subscribe((rescreve) => {
+        this.snackbar.addSuccess('Tarefa Atualizada com Sucesso');
+        this.rota.navigate(['/']);
+      });
+    } else {
+      this.form.dirty;
+      this.form.touched;
+      this.snackbar.addError('Necessário preencher os campos');
+    }
   }
 
+  validateAllFormFields(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach((field) => {
+      const control = formGroup.get(field);
+      if (control instanceof FormControl) {
+        control.markAsTouched();
+        control.markAsDirty();
+      } else if (control instanceof FormGroup) {
+        this.validateAllFormFields(control);
+      }
+    });
+  }
 }
-
-
-
-
