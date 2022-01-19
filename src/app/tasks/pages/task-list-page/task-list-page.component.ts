@@ -2,6 +2,7 @@ import { TaskRepository } from './../../repositories/task.repository';
 import { ITask } from './../../models/itask';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
+import { SnackBarService } from 'src/app/services/snack-bar-service';
 
 @Component({
   selector: 'app-task-list-page',
@@ -24,7 +25,8 @@ export class TaskListPageComponent implements OnInit {
   ];
 
   constructor(
-    private taskRepository: TaskRepository
+    private taskRepository: TaskRepository,
+    private snackbar: SnackBarService
 
   ) { }
 
@@ -55,6 +57,7 @@ export class TaskListPageComponent implements OnInit {
         // de ser excluída não apareça
         // com isso não preciso recarregar a tela novamente
         this.table?.renderRows();
+        this.snackbar.addSuccess('Exclusão Realizada com Sucesso');
       },
       error: () => alert('Erro ao deletar tarefa')
     });

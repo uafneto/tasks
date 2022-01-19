@@ -1,7 +1,7 @@
 import { ITask } from './../../models/itask';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TaskRepository } from '../../repositories/task.repository';
 import { SnackBarService } from 'src/app/services/snack-bar-service';
 
@@ -36,7 +36,8 @@ export class TaskFormPageComponent implements OnInit {
     private formBuild: FormBuilder,
     private activatedRouter: ActivatedRoute,
     private taskRepository: TaskRepository,
-    private snackbar: SnackBarService
+    private snackbar: SnackBarService,
+    private rota: Router
   ) {}
 
   ngOnInit(): void {
@@ -77,14 +78,17 @@ export class TaskFormPageComponent implements OnInit {
   create(task: ITask): void {
     this.taskRepository.create(task).subscribe(escreve => {
       this.snackbar.addSuccess('Tarefa Criada com Sucesso');
+      this.rota.navigate(['/']);
     });
   }
 
   update(task: ITask): void {
     this.taskRepository.update(task).subscribe(rescreve => {
-      this.snackbar.addInfo('Tarefa Atualizada com Sucesso')
+      this.snackbar.addInfo('Tarefa Atualizada com Sucesso');
+      this.rota.navigate(['/']);
     });
   }
+
 }
 
 
