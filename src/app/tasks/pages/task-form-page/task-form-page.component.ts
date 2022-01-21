@@ -73,6 +73,13 @@ export class TaskFormPageComponent implements OnInit {
       id: this.taskId, // atualizando o id caso exista
     };
 
+    if (this.form.invalid) {
+      this.form.markAsDirty();
+      this.form.markAsTouched();
+      this.snackbar.addError('Necessário preencher os campos');
+      return;
+    }
+
     if (taskToSave.id) {
       this.update(taskToSave);
     } else {
@@ -81,29 +88,17 @@ export class TaskFormPageComponent implements OnInit {
   }
 
   create(task: ITask): void {
-    if (this.form.valid) {
-      this.taskRepository.create(task).subscribe((escreve) => {
-        this.snackbar.addSuccess('Tarefa Criada com Sucesso');
-        this.rota.navigate(['/']);
-      });
-    } else {
-      this.form.dirty;
-      this.form.touched;
-      this.snackbar.addError('Necessário preencher os campos');
-    }
+    this.taskRepository.create(task).subscribe((escreve) => {
+      this.snackbar.addSuccess('Tarefa Criada com Sucesso');
+      this.rota.navigate(['/']);
+    });
   }
 
   update(task: ITask): void {
-    if (this.form.valid) {
-      this.taskRepository.update(task).subscribe((rescreve) => {
-        this.snackbar.addSuccess('Tarefa Atualizada com Sucesso');
-        this.rota.navigate(['/']);
-      });
-    } else {
-      this.form.dirty;
-      this.form.touched;
-      this.snackbar.addError('Necessário preencher os campos');
-    }
+    this.taskRepository.update(task).subscribe((rescreve) => {
+      this.snackbar.addSuccess('Tarefa Atualizada com Sucesso');
+      this.rota.navigate(['/']);
+    });
   }
 
   validateAllFormFields(formGroup: FormGroup) {
